@@ -13,7 +13,7 @@ export const useCardStore = defineStore('card', () => {
   const hasShopCards = computed(() => shopCards.value.length > 0)
 
   async function addShopCards(data: any[]) {
-    const shopCards: ShopCard[] = data.map((item) => ({
+    const newShopCards: ShopCard[] = data.map((item) => ({
       id: item.cardId?.toString() || '', // Ensure id is a string
       name: item.cardTitle || 'Unknown', // Default name if missing
       sellPrice: item.sellOrderLow || 0, // Default sellPrice if missing
@@ -25,18 +25,20 @@ export const useCardStore = defineStore('card', () => {
       lastPrice: item.lastPrice || 0,
       date: item.date || '', // Default date if missing
     }))
-    await db.shopCards.bulkAdd(shopCards)
+    await db.shopCards.bulkAdd(newShopCards)
+    shopCards.value.push(...newShopCards)
   }
 
   async function addUserCards(data: any[]) {
-    const userCards: UserCard[] = data.map((item) => ({
+    const newUserCards: UserCard[] = data.map((item) => ({
       id: item.cardId?.toString() || '', // Ensure id is a string
       name: item.cardTitle || 'Unknown', // Default name if missing
       quantity: item.quantity || 0, // Default quantity if missing
       points: item.points || 0, // Default points if missing
       lock: item.lock || false, // Default lock if missing
     }))
-    await db.userCards.bulkAdd(userCards)
+    await db.userCards.bulkAdd(newUserCards)
+    userCards.value.push(...newUserCards)
   }
   async function clearShopCards() {
     await db.shopCards.clear()
