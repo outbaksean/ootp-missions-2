@@ -119,7 +119,7 @@ export default class MissionHelper {
   static isMissionComplete(mission: Mission, userCards: Array<UserCard>): boolean {
     if (mission.type === 'count') {
       const ownedCount = userCards.filter((userCard) =>
-        mission.cards.some((card) => card.cardId === userCard.cardId),
+        mission.cards.some((card) => card.cardId == userCard.cardId),
       ).length
 
       return ownedCount >= mission.requiredCount

@@ -48,7 +48,6 @@ export const useCardStore = defineStore('card', () => {
 
         await clearShopCards()
         await addShopCards(data)
-        console.log('Shop file uploaded successfully')
       },
     })
   }
@@ -68,7 +67,6 @@ export const useCardStore = defineStore('card', () => {
 
         await clearUserCards()
         await addUserCards(data)
-        console.log('User file uploaded successfully')
       },
     })
   }

@@ -23,13 +23,6 @@ export const useMissionStore = defineStore('mission', () => {
         selectedPriceType.value.sellPrice,
       )
       const completed = MissionHelper.isMissionComplete(mission, userCards)
-      const remainingPriceText = completed
-        ? 'Complete'
-        : `Remaining Price: PP ${remainingPrice.totalPrice.toLocaleString(undefined, {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-          })}`
-      console.log('remainingPrice:', remainingPrice)
       const missionCards = mission.cards
         .map((card) => {
           const shopCard = shopCards.find((shopCard) => shopCard.cardId == card.cardId)
@@ -99,19 +92,16 @@ export const useMissionStore = defineStore('mission', () => {
             mission.rawMission.missionIds &&
             mission.rawMission.missionIds.some((id) => id == userMission.rawMission.id),
         )
-        console.log('subMissions:', subMissions)
         const completedCount = subMissions.filter((m) => m.completed).length
 
         // take the sum of the x lowest remaining prices of the subMissions where x is requiredCount minus completedCount
         const remainingCount = mission.rawMission.requiredCount - completedCount
-        console.log('remainingCount:', remainingCount)
         const lowestRemainingPrices = subMissions
           .filter((m) => !m.completed)
           .filter((m) => m.remainingPrice > 0)
           .map((m) => m.remainingPrice)
           .sort((a, b) => a - b)
           .slice(0, remainingCount)
-        console.log('lowestRemainingPrices:', lowestRemainingPrices)
         const totalRemainingPrice = lowestRemainingPrices.reduce((sum, price) => sum + price, 0)
 
         mission.progressText = `${completedCount} out of ${mission.rawMission.requiredCount} missions completed`
