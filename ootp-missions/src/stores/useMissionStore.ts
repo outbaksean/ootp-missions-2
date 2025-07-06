@@ -10,8 +10,10 @@ export const useMissionStore = defineStore('mission', () => {
   const userMissions = ref<Array<UserMission>>([])
   const selectedMission = ref<UserMission | null>(null)
   const selectedPriceType = ref<PriceType>({ sellPrice: true })
+  const loading = ref(true)
 
   async function initialize() {
+    loading.value = true
     const shopCards = await db.shopCards.toArray()
     const userCards = await db.userCards.toArray()
 
@@ -75,6 +77,7 @@ export const useMissionStore = defineStore('mission', () => {
         progressText = `${ownedCount} out of any ${mission.requiredCount} of ${mission.totalPoints} total`
       }
 
+      loading.value = false
       return {
         id: mission.id,
         rawMission: mission,
@@ -110,5 +113,5 @@ export const useMissionStore = defineStore('mission', () => {
     })
   }
 
-  return { userMissions, selectedMission, selectedPriceType, initialize }
+  return { userMissions, selectedMission, selectedPriceType, loading, initialize }
 })

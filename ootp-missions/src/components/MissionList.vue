@@ -1,6 +1,10 @@
 <template>
   <div class="mission-container">
-    <div class="mission-list">
+    <!-- Add spinner when loading -->
+    <div v-if="missionStore.loading" class="spinner-container">
+      <div class="spinner"></div>
+    </div>
+    <div v-else class="mission-list">
       <div class="mission-header">
         <h2>Missions</h2>
         <div class="form-check form-switch price-toggle">
@@ -235,5 +239,30 @@ input:checked + .slider:before {
 
 .mission-dropdown {
   margin-left: 20px;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
