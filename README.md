@@ -1,0 +1,9 @@
+## To deploy to github pages
+
+- After making changes run `npm run build` from the `/ootp-missions` folder
+- run `git add -f dist` to commit the deployed changes. This seems needed due to a gitignore issue I haven't looked into.
+- run git subtree push --prefix ootp-missions/dist origin gh-pages
+
+## To add new missions
+
+- Update `/ootp-missions/src/data/missions.ts` with a new entry for each mission
