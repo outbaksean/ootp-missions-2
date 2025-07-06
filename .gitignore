@@ -74,8 +74,5 @@ Thumbs.db
 *.swp
 *.swo
 
-# Dist folder
-dist/
-
 # Coverage reports
 coverage/
