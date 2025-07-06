@@ -90,7 +90,8 @@ export default class MissionHelper {
         const shopCard = shopCardsData.find((shopCard) => shopCard.cardId == card.cardId)
         if (!shopCard) return null
 
-        const price = useSellPrice ? shopCard.sellOrderLow : shopCard.lastPrice
+        const price =
+          useSellPrice && shopCard.sellOrderLow > 0 ? shopCard.sellOrderLow : shopCard.lastPrice
 
         return { cardId: card.cardId, price }
       })

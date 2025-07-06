@@ -77,19 +77,8 @@ export const useCardStore = defineStore('card', () => {
     const existingShopCards = await db.shopCards.toArray()
     const existingUserCards = await db.userCards.toArray()
 
-    shopCards.value = existingShopCards.map((item) => ({
-      cardId: item.cardId,
-      cardTitle: item.cardTitle,
-      cardValue: item.cardValue,
-      sellOrderLow: item.sellOrderLow,
-      lastPrice: item.lastPrice,
-      date: item.date,
-    }))
-
-    userCards.value = existingUserCards.map((item) => ({
-      cardId: item.cardId,
-      lock: item.lock,
-    }))
+    shopCards.value = existingShopCards
+    userCards.value = existingUserCards
 
     if (shopCards.value.length === 0) {
       const response = await fetch('/src/data/shop_cards_initial.csv')
