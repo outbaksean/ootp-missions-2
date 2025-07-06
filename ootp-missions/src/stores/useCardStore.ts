@@ -61,8 +61,8 @@ export const useCardStore = defineStore('card', () => {
         const data = results.data.map(
           (row: any) =>
             ({
-              cardId: row['Card ID'].toString(),
-              lock: row['Lock'] === 'true', // Convert string to boolean
+              cardId: row['CID'].toString(),
+              lock: row['Lock'] === 'Yes', // Convert string to boolean
             }) as UserCard,
         )
 

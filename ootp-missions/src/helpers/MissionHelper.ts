@@ -18,7 +18,7 @@ export default class MissionHelper {
   } {
     const ownedPoints = userCards.reduce(
       (sum, userCard) =>
-        sum + (mission.cards.find((card) => card.cardId === userCard.cardId)?.points || 0),
+        sum + (mission.cards.find((card) => card.cardId == userCard.cardId)?.points || 0),
       0,
     )
 
@@ -35,7 +35,7 @@ export default class MissionHelper {
     ) => {
       const totalPoints = combination.reduce(
         (sum, card) =>
-          sum + (mission.cards.find((mCard) => mCard.cardId === card.cardId)?.points || 0),
+          sum + (mission.cards.find((mCard) => mCard.cardId == card.cardId)?.points || 0),
         0,
       )
       const totalPrice = combination.reduce((sum, card) => sum + card.price, 0)
@@ -67,9 +67,8 @@ export default class MissionHelper {
   } {
     const requiredCount = Math.max(
       mission.requiredCount -
-        userCards.filter((userCard) =>
-          mission.cards.some((card) => card.cardId === userCard.cardId),
-        ).length,
+        userCards.filter((userCard) => mission.cards.some((card) => card.cardId == userCard.cardId))
+          .length,
       0,
     )
 
@@ -86,9 +85,9 @@ export default class MissionHelper {
     useSellPrice: boolean,
   ): PriceCalculationResult {
     const nonOwnedCards = mission.cards
-      .filter((card) => !userCards.some((userCard) => userCard.cardId === card.cardId))
+      .filter((card) => !userCards.some((userCard) => userCard.cardId == card.cardId))
       .map((card) => {
-        const shopCard = shopCardsData.find((shopCard) => shopCard.cardId === card.cardId)
+        const shopCard = shopCardsData.find((shopCard) => shopCard.cardId == card.cardId)
         if (!shopCard) return null
 
         const price = useSellPrice ? shopCard.sellOrderLow : shopCard.lastPrice
@@ -126,7 +125,7 @@ export default class MissionHelper {
     } else if (mission.type === 'points') {
       const ownedPoints = userCards.reduce(
         (sum, userCard) =>
-          sum + (mission.cards.find((card) => card.cardId === userCard.cardId)?.points || 0),
+          sum + (mission.cards.find((card) => card.cardId == userCard.cardId)?.points || 0),
         0,
       )
 

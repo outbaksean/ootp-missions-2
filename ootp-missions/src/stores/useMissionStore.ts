@@ -29,22 +29,24 @@ export const useMissionStore = defineStore('mission', () => {
             minimumFractionDigits: 0,
             maximumFractionDigits: 0,
           })}`
-
+      console.log('remainingPrice:', remainingPrice)
       const missionCards = mission.cards
         .map((card) => {
-          const shopCard = shopCards.find((shopCard) => shopCard.cardId === card.cardId)
+          const shopCard = shopCards.find((shopCard) => shopCard.cardId == card.cardId)
+
+          if (!shopCard || shopCard.cardId === undefined) {
+            return null
+          }
           console.log('cardId:', card.cardId, 'shopCard:', shopCard)
-          if (!shopCard || shopCard.cardId === undefined) return null
-
-          const userCard = userCards.find((userCard) => userCard.cardId === card.cardId)
-
+          const userCard = userCards.find((userCard) => userCard.cardId == card.cardId)
+          console.log('userCard:', userCard)
           const price = selectedPriceType.value.sellPrice
             ? shopCard.sellOrderLow || shopCard.lastPrice
             : shopCard.lastPrice
-
+          console.log('price:', price)
           const highlighted =
             remainingPrice.totalPrice > 0 &&
-            remainingPrice.includedCards.some((c) => c.cardId === card.cardId)
+            remainingPrice.includedCards.some((c) => c.cardId == card.cardId)
 
           return {
             cardId: shopCard.cardId,

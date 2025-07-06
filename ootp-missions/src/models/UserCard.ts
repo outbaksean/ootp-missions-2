@@ -1,4 +1,4 @@
 export type UserCard = {
-  cardId?: number
+  cardId: number
   lock: boolean
 }
