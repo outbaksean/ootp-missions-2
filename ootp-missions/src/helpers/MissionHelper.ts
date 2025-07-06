@@ -83,7 +83,7 @@ export default class MissionHelper {
     mission: Mission,
     userCards: Array<UserCard>,
     shopCardsData: Array<ShopCard>,
-    selectedPriceType: string,
+    useSellPrice: boolean,
   ): PriceCalculationResult {
     const nonOwnedCards = mission.cards
       .filter((card) => !userCards.some((userCard) => userCard.cardId === card.cardId))
@@ -91,7 +91,7 @@ export default class MissionHelper {
         const shopCard = shopCardsData.find((shopCard) => shopCard.cardId === card.cardId)
         if (!shopCard) return null
 
-        const price = selectedPriceType === 'sellPrice' ? shopCard.sellOrderLow : shopCard.lastPrice
+        const price = useSellPrice ? shopCard.sellOrderLow : shopCard.lastPrice
 
         return { cardId: card.cardId, price }
       })
@@ -114,5 +114,25 @@ export default class MissionHelper {
         includedCards: [],
       }
     }
+  }
+
+  static isMissionComplete(mission: Mission, userCards: Array<UserCard>): boolean {
+    if (mission.type === 'count') {
+      const ownedCount = userCards.filter((userCard) =>
+        mission.cards.some((card) => card.cardId === userCard.cardId),
+      ).length
+
+      return ownedCount >= mission.requiredCount
+    } else if (mission.type === 'points') {
+      const ownedPoints = userCards.reduce(
+        (sum, userCard) =>
+          sum + (mission.cards.find((card) => card.cardId === userCard.cardId)?.points || 0),
+        0,
+      )
+
+      return ownedPoints >= mission.requiredCount
+    }
+
+    return false
   }
 }
