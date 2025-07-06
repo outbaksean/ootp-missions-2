@@ -4,6 +4,7 @@ import type { UserCard } from '@/models/UserCard'
 import type { ShopCard } from '@/models/ShopCard'
 import db from '@/data/indexedDB'
 import Papa from 'papaparse'
+import shopCardsInitialText from '@/data/shop_cards_initial.csv?raw'
 
 export const useCardStore = defineStore('card', () => {
   const userCards = ref<Array<UserCard>>([])
@@ -79,11 +80,25 @@ export const useCardStore = defineStore('card', () => {
     userCards.value = existingUserCards
 
     if (shopCards.value.length === 0) {
-      const response = await fetch('/src/data/shop_cards_initial.csv')
-      const shopCardInitialFile = new File([await response.text()], 'shop_cards_initial.csv', {
-        type: 'text/csv',
+      Papa.parse(shopCardsInitialText, {
+        header: true,
+        skipEmptyLines: true,
+        complete: async (results: { data: ShopCard[] }) => {
+          const data = results.data.map((row: any) => ({
+            cardId: row['Card ID'].toString(),
+            name: row['//Card Title'] || 'Unknown',
+            sellPrice: parseInt(row['Sell Order Low'], 10) || 0,
+            cardTitle: row['//Card Title'] || 'Unknown',
+            cardValue: parseInt(row['Card Value'], 10) || 0,
+            sellOrderLow: parseInt(row['Sell Order Low'], 10) || 0,
+            lastPrice: parseInt(row['Last 10 Price'], 10) || 0,
+            date: row['date'] || '',
+          }))
+
+          await clearShopCards()
+          await addShopCards(data)
+        },
       })
-      await uploadShopFile(shopCardInitialFile)
     }
   }
 

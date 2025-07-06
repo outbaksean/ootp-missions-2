@@ -111,7 +111,7 @@ const filteredMissions = computed(() => {
 const remainingPriceText = (mission: UserMission) => {
   // format mission.remainingPrice as a string with thousands separator
   if (mission.remainingPrice <= 0) {
-    return 'Mission Complete'
+    return 'Remaining Price: Unknown'
   }
   return `Remaining Price: ${mission.remainingPrice.toLocaleString(undefined, {
     minimumFractionDigits: 0,
