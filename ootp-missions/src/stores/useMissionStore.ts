@@ -37,13 +37,13 @@ export const useMissionStore = defineStore('mission', () => {
           if (!shopCard || shopCard.cardId === undefined) {
             return null
           }
-          console.log('cardId:', card.cardId, 'shopCard:', shopCard)
+
           const userCard = userCards.find((userCard) => userCard.cardId == card.cardId)
-          console.log('userCard:', userCard)
+
           const price = selectedPriceType.value.sellPrice
             ? shopCard.sellOrderLow || shopCard.lastPrice
             : shopCard.lastPrice
-          console.log('price:', price)
+
           const highlighted =
             remainingPrice.totalPrice > 0 &&
             remainingPrice.includedCards.some((c) => c.cardId == card.cardId)
@@ -58,6 +58,11 @@ export const useMissionStore = defineStore('mission', () => {
           }
         })
         .filter((card) => card !== null)
+        .sort((a, b) => {
+          if (a.owned !== b.owned) return a.owned ? 1 : -1
+          if (a.locked !== b.locked) return a.locked ? 1 : -1
+          return a.price - b.price
+        })
 
       console.log('initializing')
       return {
