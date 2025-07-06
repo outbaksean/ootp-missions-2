@@ -55,6 +55,7 @@ export const useMissionStore = defineStore('mission', () => {
             locked: userCard?.lock || false,
             price,
             highlighted: highlighted,
+            points: card.points || 0,
           }
         })
         .filter((card) => card !== null)
