@@ -6,4 +6,6 @@ export interface Mission {
   totalPoints?: number
   cards: Array<{ cardId: number; points?: number }>
   missionIds?: Array<number>
+  reward: string
+  category: string
 }

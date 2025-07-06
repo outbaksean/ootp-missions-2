@@ -6,6 +6,8 @@ const missions: Mission[] = [
     name: 'First Victims',
     type: 'count',
     requiredCount: 18,
+    reward: '3 Standard Packs',
+    category: 'Future Legends',
     cards: [
       { cardId: 72503 },
       { cardId: 72504 },
@@ -32,6 +34,8 @@ const missions: Mission[] = [
     name: 'Call-Ups',
     type: 'points',
     requiredCount: 305,
+    reward: '2 Historical Diamond Packs',
+    category: 'Future Legends',
     cards: [
       { cardId: 73275, points: 5 },
       { cardId: 73207, points: 5 },
@@ -59,6 +63,8 @@ const missions: Mission[] = [
     name: 'The Next Generation',
     type: 'points',
     requiredCount: 450,
+    reward: '3 Historical Diamond Packs',
+    category: 'Future Legends',
     cards: [
       { cardId: 73857, points: 5 },
       { cardId: 74012, points: 5 },
@@ -90,6 +96,8 @@ const missions: Mission[] = [
     name: 'Opening Day',
     type: 'points',
     requiredCount: 185,
+    reward: '4 Historical Gold Packs',
+    category: 'Future Legends',
     cards: [
       { cardId: 72801, points: 5 },
       { cardId: 72795, points: 15 },
@@ -107,6 +115,8 @@ const missions: Mission[] = [
     type: 'missions',
     requiredCount: 4,
     missionIds: [1, 2, 3, 4],
+    reward: 'Future Legend Call-Ups SP Jacob Misiorowski MIL 2025',
+    category: 'Future Legends',
     cards: [],
   },
 ]
