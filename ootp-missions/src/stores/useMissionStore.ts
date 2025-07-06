@@ -33,6 +33,7 @@ export const useMissionStore = defineStore('mission', () => {
       const missionCards = mission.cards
         .map((card) => {
           const shopCard = shopCards.find((shopCard) => shopCard.cardId === card.cardId)
+          console.log('cardId:', card.cardId, 'shopCard:', shopCard)
           if (!shopCard || shopCard.cardId === undefined) return null
 
           const userCard = userCards.find((userCard) => userCard.cardId === card.cardId)
@@ -56,12 +57,13 @@ export const useMissionStore = defineStore('mission', () => {
         })
         .filter((card) => card !== null)
 
+      console.log('initializing')
       return {
         id: mission.id,
         rawMission: mission,
         progressText: remainingPriceText,
         completed: completed,
-        missionCards,
+        missionCards: missionCards,
       }
     })
   }

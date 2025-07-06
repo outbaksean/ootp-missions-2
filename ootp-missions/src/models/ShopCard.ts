@@ -1,5 +1,5 @@
 export type ShopCard = {
-  cardId?: number
+  cardId: number
   cardTitle: string
   cardValue: number
   sellOrderLow: number

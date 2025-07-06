@@ -12,33 +12,14 @@ export const useCardStore = defineStore('card', () => {
   const hasUserCards = computed(() => userCards.value.length > 0)
   const hasShopCards = computed(() => shopCards.value.length > 0)
 
-  async function addShopCards(data: any[]) {
-    const newShopCards: ShopCard[] = data.map((item) => ({
-      id: item.cardId?.toString() || '', // Ensure id is a string
-      name: item.cardTitle || 'Unknown', // Default name if missing
-      sellPrice: item.sellOrderLow || 0, // Default sellPrice if missing
-      buyPrice: item.buyOrderHigh || 0, // Default buyPrice if missing
-      points: item.cardValue || 0, // Default points if missing
-      cardTitle: item.cardTitle || 'Unknown',
-      cardValue: item.cardValue || 0,
-      sellOrderLow: item.sellOrderLow || 0,
-      lastPrice: item.lastPrice || 0,
-      date: item.date || '', // Default date if missing
-    }))
-    await db.shopCards.bulkAdd(newShopCards)
-    shopCards.value.push(...newShopCards)
+  async function addShopCards(data: ShopCard[]) {
+    await db.shopCards.bulkAdd(data)
+    shopCards.value.push(...data)
   }
 
-  async function addUserCards(data: any[]) {
-    const newUserCards: UserCard[] = data.map((item) => ({
-      id: item.cardId?.toString() || '', // Ensure id is a string
-      name: item.cardTitle || 'Unknown', // Default name if missing
-      quantity: item.quantity || 0, // Default quantity if missing
-      points: item.points || 0, // Default points if missing
-      lock: item.lock || false, // Default lock if missing
-    }))
-    await db.userCards.bulkAdd(newUserCards)
-    userCards.value.push(...newUserCards)
+  async function addUserCards(data: UserCard[]) {
+    await db.userCards.bulkAdd(data)
+    userCards.value.push(...data)
   }
   async function clearShopCards() {
     await db.shopCards.clear()
@@ -53,16 +34,13 @@ export const useCardStore = defineStore('card', () => {
     Papa.parse(text, {
       header: true,
       skipEmptyLines: true,
-      complete: async (results: { data: any[] }) => {
+      complete: async (results: { data: ShopCard[] }) => {
         const data = results.data.map((row: any) => ({
-          id: row['Card ID'].toString(),
+          cardId: row['Card ID'].toString(),
           name: row['//Card Title'] || 'Unknown',
           sellPrice: parseInt(row['Sell Order Low'], 10) || 0,
-          buyPrice: parseInt(row['Buy Order High'], 10) || 0,
-          points: parseInt(row['Card Value'], 10) || 0,
           cardTitle: row['//Card Title'] || 'Unknown',
           cardValue: parseInt(row['Card Value'], 10) || 0,
-          buyOrderHigh: parseInt(row['Buy Order High'], 10) || 0,
           sellOrderLow: parseInt(row['Sell Order Low'], 10) || 0,
           lastPrice: parseInt(row['Last 10 Price'], 10) || 0,
           date: row['date'] || '',
@@ -79,14 +57,14 @@ export const useCardStore = defineStore('card', () => {
     Papa.parse(text, {
       header: true,
       skipEmptyLines: true,
-      complete: async (results: { data: any[] }) => {
-        const data = results.data.map((row: any) => ({
-          id: row['Card ID'].toString(),
-          name: row['//Card Title'] || 'Unknown',
-          quantity: parseInt(row['Quantity'], 10) || 0,
-          points: parseInt(row['Points'], 10) || 0,
-          lock: row['Lock'] === 'true', // Convert string to boolean
-        }))
+      complete: async (results: { data: UserCard[] }) => {
+        const data = results.data.map(
+          (row: any) =>
+            ({
+              cardId: row['Card ID'].toString(),
+              lock: row['Lock'] === 'true', // Convert string to boolean
+            }) as UserCard,
+        )
 
         await clearUserCards()
         await addUserCards(data)
