@@ -7,4 +7,5 @@ export interface UserMission {
   progressText: string
   completed: boolean
   missionCards: Array<MissionCard>
+  remainingPrice: number
 }

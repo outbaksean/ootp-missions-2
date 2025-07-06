@@ -64,13 +64,57 @@ export const useMissionStore = defineStore('mission', () => {
           return a.price - b.price
         })
 
-      console.log('initializing')
+      let progressText = ''
+      if (mission.type === 'points') {
+        const ownedPoints = userCards.reduce((total, userCard) => {
+          const card = mission?.cards.find((missionCard) => missionCard.cardId == userCard.cardId)
+          return total + (card?.points || 0)
+        }, 0)
+
+        const remainingPrice = (mission.requiredCount ?? 0) - ownedPoints
+        progressText = `${ownedPoints} points out of ${mission.requiredCount} of any ${mission.totalPoints} total (${remainingPrice} remaining)`
+      } else {
+        const ownedCount = userCards.filter((userCard) =>
+          mission?.cards.some((card) => card.cardId == userCard.cardId),
+        ).length
+
+        progressText = `${ownedCount} out of any ${mission.requiredCount} of ${mission.totalPoints} total`
+      }
+
       return {
         id: mission.id,
         rawMission: mission,
-        progressText: remainingPriceText,
+        progressText: progressText,
         completed: completed,
         missionCards: missionCards,
+        remainingPrice: remainingPrice.totalPrice,
+      }
+    })
+    userMissions.value.forEach((mission) => {
+      if (mission.rawMission.type === 'missions') {
+        // Count the number of userMissions that are completed and have missionIds in this mission
+        const subMissions = userMissions.value.filter(
+          (userMission) =>
+            mission.rawMission.missionIds &&
+            mission.rawMission.missionIds.some((id) => id == userMission.rawMission.id),
+        )
+        console.log('subMissions:', subMissions)
+        const completedCount = subMissions.filter((m) => m.completed).length
+
+        // take the sum of the x lowest remaining prices of the subMissions where x is requiredCount minus completedCount
+        const remainingCount = mission.rawMission.requiredCount - completedCount
+        console.log('remainingCount:', remainingCount)
+        const lowestRemainingPrices = subMissions
+          .filter((m) => !m.completed)
+          .filter((m) => m.remainingPrice > 0)
+          .map((m) => m.remainingPrice)
+          .sort((a, b) => a - b)
+          .slice(0, remainingCount)
+        console.log('lowestRemainingPrices:', lowestRemainingPrices)
+        const totalRemainingPrice = lowestRemainingPrices.reduce((sum, price) => sum + price, 0)
+
+        mission.progressText = `${completedCount} out of ${mission.rawMission.requiredCount} missions completed`
+        mission.remainingPrice = totalRemainingPrice
       }
     })
   }
