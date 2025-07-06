@@ -74,12 +74,6 @@ Thumbs.db
 *.swp
 *.swo
 
-# Vue files
-*.vue
-
-# Public folder
-public/
-
 # Dist folder
 dist/
 
