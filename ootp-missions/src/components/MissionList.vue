@@ -17,6 +17,10 @@
           />
           <span>Use Sell Price</span>
         </div>
+        <div class="form-check form-switch price-toggle">
+          <input type="checkbox" class="form-check-input" role="switch" v-model="hideCompleted" />
+          <span>Hide Completed</span>
+        </div>
         <select v-model="selectedMissionFilter" class="mission-dropdown">
           <option value="">All Missions</option>
           <option v-for="mission in missionsOfTypeMissions" :key="mission.id" :value="mission.id">
@@ -117,6 +121,7 @@ const missionsOfTypeMissions = computed(() =>
 const selectedMission = ref<UserMission | null>(null)
 const useSellPrice = ref(false)
 const selectedMissionFilter = ref<string | null>(null)
+const hideCompleted = ref(false)
 
 const updatePriceType = () => {
   missionStore.selectedPriceType.sellPrice = useSellPrice.value
@@ -124,24 +129,30 @@ const updatePriceType = () => {
 }
 
 const filteredMissions = computed(() => {
-  if (!selectedMissionFilter.value) {
-    return missions.value
-  } else {
+  let result = missions.value
+
+  if (selectedMissionFilter.value) {
     const filteredMission = missions.value.find(
       (mission) => mission.id === Number(selectedMissionFilter.value),
     )
     if (filteredMission) {
       const missionIds = filteredMission.rawMission.missionIds || []
-      return missions.value.filter(
+      result = missions.value.filter(
         (mission) => missionIds.includes(mission.id) || mission.id === filteredMission.id,
       )
+    } else {
+      result = []
     }
   }
-  return []
+
+  if (hideCompleted.value) {
+    result = result.filter((mission) => !mission.completed)
+  }
+
+  return result
 })
 
 const remainingPriceText = (mission: UserMission) => {
-  // format mission.remainingPrice as a string with thousands separator
   if (mission.completed) {
     return 'Mission Completed'
   }
@@ -196,11 +207,10 @@ const selectedMissionSubMissions = computed(() => {
   return []
 })
 
-// Watch for changes in the mission store
 watch(
   () => missionStore.userMissions,
   () => {
-    selectedMission.value = null // Reset selected mission to ensure proper reactivity
+    selectedMission.value = null
   },
   { deep: true },
 )
