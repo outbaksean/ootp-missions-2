@@ -1,3 +1,5 @@
+Built with GitHub CoPilot using GPT-4o
+
 ## To deploy to github pages
 
 - After making changes run `npm run build` from the `/ootp-missions` folder
