@@ -1,4 +1,4 @@
-Built with GitHub CoPilot using GPT-4o
+Built with GitHub Copilot using GPT-4o
 
 ## To deploy to github pages
 
