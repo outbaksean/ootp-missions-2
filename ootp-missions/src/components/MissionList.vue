@@ -28,49 +28,71 @@
         <li
           v-for="mission in filteredMissions"
           :key="mission.id"
-          class="list-group-item d-flex justify-content-between align-items-center"
+          class="list-group-item d-flex flex-column align-items-start"
         >
-          <span>
-            <strong>{{ mission.rawMission.name }}</strong>
-          </span>
-          <span
-            :class="{
-              'text-success': isMissionComplete(mission),
-              'text-danger': !isMissionComplete(mission),
-            }"
-          >
-            {{ mission.progressText }}
-          </span>
-          <span class="progress-text">{{ remainingPriceText(mission) }}</span>
-          <button
-            v-if="mission.rawMission.type !== 'missions'"
-            class="btn btn-primary btn-sm"
-            @click="selectMission(mission)"
-          >
-            Select
-          </button>
+          <div class="d-flex justify-content-between w-100">
+            <span>
+              <strong>{{ mission.rawMission.name }}</strong>
+            </span>
+            <span
+              :class="{
+                'text-success': isMissionComplete(mission),
+                'text-danger': !isMissionComplete(mission),
+              }"
+            >
+              {{ mission.progressText }}
+            </span>
+            <span class="progress-text">{{ remainingPriceText(mission) }}</span>
+            <button class="btn btn-primary btn-sm" @click="selectMission(mission)">Select</button>
+          </div>
+          <div class="reward-text">{{ mission.rawMission.reward }}</div>
         </li>
       </ul>
     </div>
     <div v-if="selectedMission" class="mission-cards">
-      <h3>Mission Cards for {{ selectedMission.rawMission.name }}</h3>
-      <h4 class="text-muted">
-        {{ selectedMission.rawMission.reward }}
-      </h4>
-      <ul class="list-group">
-        <li
-          v-for="card in selectedMission.missionCards"
-          :key="card.cardId"
-          class="list-group-item"
-          :style="{ backgroundColor: card.highlighted ? '#ffeb3b' : '' }"
-        >
-          <span :class="{ 'text-muted': card.locked }">
-            {{ missionCardDescription(card) }}
-          </span>
-          <span v-if="card.owned" class="badge bg-success">Owned</span>
-          <span v-if="card.locked" class="badge bg-secondary">Locked</span>
-        </li>
-      </ul>
+      <template v-if="selectedMission.rawMission.type === 'missions'">
+        <h3>Sub-Missions for {{ selectedMission.rawMission.name }}</h3>
+        <ul class="list-group">
+          <li
+            v-for="subMission in selectedMissionSubMissions"
+            :key="subMission.id"
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            <span
+              ><strong>{{ subMission.rawMission.name }}</strong></span
+            >
+            <span
+              :class="{
+                'text-success': isMissionComplete(subMission),
+                'text-danger': !isMissionComplete(subMission),
+              }"
+            >
+              {{ subMission.progressText }}
+            </span>
+            <span class="progress-text">{{ remainingPriceText(subMission) }}</span>
+          </li>
+        </ul>
+      </template>
+      <template v-else>
+        <h3>Mission Cards for {{ selectedMission.rawMission.name }}</h3>
+        <h4 class="text-muted">
+          {{ selectedMission.rawMission.reward }}
+        </h4>
+        <ul class="list-group">
+          <li
+            v-for="card in selectedMission.missionCards"
+            :key="card.cardId"
+            class="list-group-item"
+            :style="{ backgroundColor: card.highlighted ? '#ffeb3b' : '' }"
+          >
+            <span :class="{ 'text-muted': card.locked }">
+              {{ missionCardDescription(card) }}
+            </span>
+            <span v-if="card.owned" class="badge bg-success">Owned</span>
+            <span v-if="card.locked" class="badge bg-secondary">Locked</span>
+          </li>
+        </ul>
+      </template>
     </div>
   </div>
 </template>
@@ -156,6 +178,14 @@ const isMissionComplete = (mission: UserMission) => {
 const selectMission = (mission: UserMission) => {
   selectedMission.value = mission
 }
+
+const selectedMissionSubMissions = computed(() => {
+  if (selectedMission.value?.rawMission.type === 'missions') {
+    const missionIds = selectedMission.value.rawMission.missionIds || []
+    return missions.value.filter((mission) => missionIds.includes(mission.id))
+  }
+  return []
+})
 </script>
 
 <style scoped>
@@ -264,5 +294,11 @@ input:checked + .slider:before {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.reward-text {
+  margin-top: 5px;
+  font-size: 0.9rem;
+  color: #6c757d;
 }
 </style>
