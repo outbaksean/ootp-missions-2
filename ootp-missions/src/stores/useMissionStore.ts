@@ -9,7 +9,7 @@ import db from '@/data/indexedDB'
 export const useMissionStore = defineStore('mission', () => {
   const userMissions = ref<Array<UserMission>>([])
   const selectedMission = ref<UserMission | null>(null)
-  const selectedPriceType = ref<PriceType>({ sellPrice: true })
+  const selectedPriceType = ref<PriceType>({ sellPrice: false })
   const loading = ref(true)
 
   async function initialize() {

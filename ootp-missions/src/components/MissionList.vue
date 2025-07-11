@@ -115,7 +115,7 @@ const missionsOfTypeMissions = computed(() =>
   missionStore.userMissions.filter((mission) => mission.rawMission.type === 'missions'),
 )
 const selectedMission = ref<UserMission | null>(null)
-const useSellPrice = ref(true)
+const useSellPrice = ref(false)
 const selectedMissionFilter = ref<string | null>(null)
 
 const updatePriceType = () => {
