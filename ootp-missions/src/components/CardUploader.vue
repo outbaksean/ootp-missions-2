@@ -134,9 +134,11 @@ const handleUserCardsUpload = async (event: Event) => {
 
 const clearShopCards = async () => {
   await cardStore.clearShopCards()
+  await missionStore.initialize()
 }
 
 const clearUserCards = async () => {
   await cardStore.clearUserCards()
+  await missionStore.initialize()
 }
 </script>

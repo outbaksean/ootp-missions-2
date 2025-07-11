@@ -104,7 +104,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useMissionStore } from '../stores/useMissionStore'
 import type { UserMission } from '../models/UserMission'
 import type { MissionCard } from '@/models/MissionCard'
@@ -195,6 +195,15 @@ const selectedMissionSubMissions = computed(() => {
   }
   return []
 })
+
+// Watch for changes in the mission store
+watch(
+  () => missionStore.userMissions,
+  () => {
+    selectedMission.value = null // Reset selected mission to ensure proper reactivity
+  },
+  { deep: true },
+)
 </script>
 
 <style scoped>
