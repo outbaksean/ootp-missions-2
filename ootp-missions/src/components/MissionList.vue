@@ -55,7 +55,7 @@
         </li>
       </ul>
     </div>
-    <div v-if="selectedMission" class="mission-cards">
+    <div v-if="!missionStore.loading && selectedMission" class="mission-cards">
       <template v-if="selectedMission.rawMission.type === 'missions'">
         <h3>Sub-Missions for {{ selectedMission.rawMission.name }}</h3>
         <ul class="list-group">
