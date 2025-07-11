@@ -31,19 +31,25 @@
           class="list-group-item d-flex flex-column align-items-start"
         >
           <div class="d-flex justify-content-between w-100">
-            <span>
+            <div class="col text-start">
               <strong>{{ mission.rawMission.name }}</strong>
-            </span>
-            <span
-              :class="{
-                'text-success': isMissionComplete(mission),
-                'text-danger': !isMissionComplete(mission),
-              }"
-            >
-              {{ mission.progressText }}
-            </span>
-            <span class="progress-text">{{ remainingPriceText(mission) }}</span>
-            <button class="btn btn-primary btn-sm" @click="selectMission(mission)">Select</button>
+            </div>
+            <div class="col text-start">
+              <span
+                :class="{
+                  'text-success': isMissionComplete(mission),
+                  'text-danger': !isMissionComplete(mission),
+                }"
+              >
+                {{ mission.progressText }}
+              </span>
+            </div>
+            <div class="col text-start">
+              <span class="progress-text">{{ remainingPriceText(mission) }}</span>
+            </div>
+            <div class="col-auto">
+              <button class="btn btn-primary btn-sm" @click="selectMission(mission)">Select</button>
+            </div>
           </div>
           <div class="reward-text">{{ mission.rawMission.reward }}</div>
         </li>
