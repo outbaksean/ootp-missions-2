@@ -21,12 +21,28 @@
           <input type="checkbox" class="form-check-input" role="switch" v-model="hideCompleted" />
           <span>Hide Completed</span>
         </div>
-        <select v-model="selectedMissionFilter" class="mission-dropdown">
-          <option value="">All Missions</option>
-          <option v-for="mission in missionsOfTypeMissions" :key="mission.id" :value="mission.id">
-            {{ mission.rawMission.name }} - {{ mission.rawMission.reward }}
-          </option>
-        </select>
+        <div class="form-check form-switch price-toggle">
+          <label for="target-mission-dropdown">Target Mission</label>
+          <select
+            id="target-mission-dropdown"
+            v-model="selectedMissionFilter"
+            class="mission-dropdown"
+          >
+            <option value="">All Missions</option>
+            <option v-for="mission in missionsOfTypeMissions" :key="mission.id" :value="mission.id">
+              {{ mission.rawMission.name }} - {{ mission.rawMission.reward }}
+            </option>
+          </select>
+        </div>
+        <div class="form-check form-switch price-toggle">
+          <label for="category-dropdown">Category</label>
+          <select id="category-dropdown" v-model="selectedCategoryFilter" class="mission-dropdown">
+            <option value="">All Categories</option>
+            <option v-for="category in missionCategories" :key="category" :value="category">
+              {{ category }}
+            </option>
+          </select>
+        </div>
       </div>
       <ul class="list-group">
         <li
@@ -122,6 +138,7 @@ const selectedMission = ref<UserMission | null>(null)
 const useSellPrice = ref(false)
 const selectedMissionFilter = ref<string | null>(null)
 const hideCompleted = ref(false)
+const selectedCategoryFilter = ref<string | null>(null)
 
 const updatePriceType = () => {
   missionStore.selectedPriceType.sellPrice = useSellPrice.value
@@ -147,6 +164,12 @@ const filteredMissions = computed(() => {
 
   if (hideCompleted.value) {
     result = result.filter((mission) => !mission.completed)
+  }
+
+  if (selectedCategoryFilter.value) {
+    result = result.filter(
+      (mission) => mission.rawMission.category === selectedCategoryFilter.value,
+    )
   }
 
   return result
@@ -205,6 +228,16 @@ const selectedMissionSubMissions = computed(() => {
     return missions.value.filter((mission) => missionIds.includes(mission.id))
   }
   return []
+})
+
+const missionCategories = computed(() => {
+  const categories = new Set<string>()
+  missions.value.forEach((mission) => {
+    if (mission.rawMission.category) {
+      categories.add(mission.rawMission.category)
+    }
+  })
+  return Array.from(categories)
 })
 
 watch(
