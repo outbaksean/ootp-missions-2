@@ -15,3 +15,9 @@ Built with GitHub Copilot using GPT-4o
 
 - `npm run install`
 - `npm run dev`
+
+## Stash Notes
+
+- `git stash list`
+- `git stash apply stash@{0}`
+- `git stash push -m "stash message"`
