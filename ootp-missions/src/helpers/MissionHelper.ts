@@ -1,5 +1,4 @@
 import type { ShopCard } from '../models/ShopCard'
-import type { UserCard } from '../models/UserCard'
 import type { Mission } from '../models/Mission'
 
 interface PriceCalculationResult {
@@ -11,14 +10,16 @@ export default class MissionHelper {
   private static calculatePriceDetailsPointsType(
     sortedCards: Array<{ cardId: number; price: number }>,
     mission: Mission,
-    userCards: Array<UserCard>,
+    shopCards: Array<ShopCard>,
   ): {
     totalPrice: number
     includedCards: Array<{ cardId: number; price: number }>
   } {
-    const ownedPoints = userCards.reduce(
-      (sum, userCard) =>
-        sum + (mission.cards.find((card) => card.cardId == userCard.cardId)?.points || 0),
+    const ownedPoints = shopCards.reduce(
+      (sum, shopCard) =>
+        sum +
+        (mission.cards.find((card) => shopCard.owned && card.cardId == shopCard.cardId)?.points ||
+          0),
       0,
     )
 
@@ -60,15 +61,16 @@ export default class MissionHelper {
   private static calculatePriceDetailsCardType(
     sortedCards: Array<{ cardId: number; price: number }>,
     mission: Mission,
-    userCards: Array<UserCard>,
+    userCards: Array<ShopCard>,
   ): {
     totalPrice: number
     includedCards: Array<{ cardId: number; price: number }>
   } {
     const requiredCount = Math.max(
       mission.requiredCount -
-        userCards.filter((userCard) => mission.cards.some((card) => card.cardId == userCard.cardId))
-          .length,
+        userCards.filter((shopCard) =>
+          mission.cards.some((card) => card.cardId == shopCard.cardId && shopCard.owned),
+        ).length,
       0,
     )
 
@@ -80,12 +82,14 @@ export default class MissionHelper {
 
   static calculateTotalPriceOfNonOwnedCards(
     mission: Mission,
-    userCards: Array<UserCard>,
     shopCardsData: Array<ShopCard>,
     useSellPrice: boolean,
   ): PriceCalculationResult {
     const nonOwnedCards = mission.cards
-      .filter((card) => !userCards.some((userCard) => userCard.cardId == card.cardId))
+      .filter(
+        (card) =>
+          !shopCardsData.some((shopCard) => shopCard.cardId == card.cardId && shopCard.owned),
+      )
       .map((card) => {
         const shopCard = shopCardsData.find((shopCard) => shopCard.cardId == card.cardId)
         if (!shopCard) return null
@@ -105,9 +109,9 @@ export default class MissionHelper {
 
     // Delegate price calculation to private method
     if (mission.type === 'count') {
-      return this.calculatePriceDetailsCardType(sortedCards, mission, userCards)
+      return this.calculatePriceDetailsCardType(sortedCards, mission, shopCardsData)
     } else if (mission.type === 'points') {
-      return this.calculatePriceDetailsPointsType(sortedCards, mission, userCards)
+      return this.calculatePriceDetailsPointsType(sortedCards, mission, shopCardsData)
     } else {
       return {
         totalPrice: 0,
@@ -116,17 +120,19 @@ export default class MissionHelper {
     }
   }
 
-  static isMissionComplete(mission: Mission, userCards: Array<UserCard>): boolean {
+  static isMissionComplete(mission: Mission, shopCards: Array<ShopCard>): boolean {
     if (mission.type === 'count') {
-      const ownedCount = userCards.filter((userCard) =>
-        mission.cards.some((card) => card.cardId == userCard.cardId),
+      const ownedCount = shopCards.filter((shopCard) =>
+        mission.cards.some((card) => card.cardId == shopCard.cardId && shopCard.owned),
       ).length
 
       return ownedCount >= mission.requiredCount
     } else if (mission.type === 'points') {
-      const ownedPoints = userCards.reduce(
-        (sum, userCard) =>
-          sum + (mission.cards.find((card) => card.cardId == userCard.cardId)?.points || 0),
+      const ownedPoints = shopCards.reduce(
+        (sum, shopCard) =>
+          sum +
+          (mission.cards.find((card) => card.cardId == shopCard.cardId && shopCard.owned)?.points ||
+            0),
         0,
       )
 

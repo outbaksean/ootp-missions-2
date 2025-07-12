@@ -32,17 +32,6 @@
             Clear
           </button>
         </div>
-
-        <div class="d-flex align-items-center">
-          <label for="userCardsFile" class="form-label me-2">User Cards:</label>
-          <input
-            type="file"
-            id="userCardsFile"
-            class="form-control me-2"
-            @change="handleUserCardsUpload"
-          />
-          <button v-if="hasUserCards" class="btn btn-danger" @click="clearUserCards">Clear</button>
-        </div>
       </div>
     </div>
 
@@ -66,33 +55,18 @@
             ></button>
           </div>
           <div class="modal-body">
-            <p class="text-danger mx-3 mb-3">
-              Note: If you have more than 8190 cards exports will be paginated essentially making
-              exporting your card inventory impossible. I recommend quickselling dupliates to get
-              under the limit.
-            </p>
             <p class="text-muted mx-3 mb-3">
-              To get the latest price data, from the card shop, with no filters on click Export Card
-              List to CSV.
+              To get the latest price and ownership data, from the card shop, with no filters on
+              click Export Card List to CSV.
             </p>
             <img
               src="/OotpExportShopCards.jpg"
               alt="Shop Cards Export Help"
               class="img-fluid mb-3"
             />
-            <p class="text-muted mx-3 mb-3">
-              To export your owned card data, add "PT Card ID" and "PT Lock" to a view and with no
-              filters click Report, Write report to csv.
-            </p>
-            <img src="/OotpUserCardView.jpg" alt="User Card View Help" class="img-fluid" />
-            <img
-              src="/OotpExportUserCards.jpg"
-              alt="User Cards Export Help"
-              class="img-fluid mb-3"
-            />
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
           </div>
         </div>
       </div>
@@ -109,15 +83,10 @@ const cardStore = useCardStore()
 const missionStore = useMissionStore()
 
 const hasShopCards = computed(() => cardStore.hasShopCards)
-const hasUserCards = computed(() => cardStore.hasUserCards)
 
 const loadedMessage = computed(() => {
-  if (hasShopCards.value && hasUserCards.value) {
-    return 'Both shop and user cards are loaded.'
-  } else if (hasShopCards.value) {
+  if (hasShopCards.value) {
     return 'Shop cards are loaded.'
-  } else if (hasUserCards.value) {
-    return 'User cards are loaded.'
   }
   return 'No cards loaded.'
 })
@@ -130,21 +99,8 @@ const handleShopCardsUpload = async (event: Event) => {
   }
 }
 
-const handleUserCardsUpload = async (event: Event) => {
-  const file = (event.target as HTMLInputElement).files?.[0]
-  if (file) {
-    await cardStore.uploadUserFile(file)
-    await missionStore.initialize()
-  }
-}
-
 const clearShopCards = async () => {
   await cardStore.clearShopCards()
-  await missionStore.initialize()
-}
-
-const clearUserCards = async () => {
-  await cardStore.clearUserCards()
   await missionStore.initialize()
 }
 </script>

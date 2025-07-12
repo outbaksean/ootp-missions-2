@@ -14,7 +14,6 @@ export const useMissionStore = defineStore('mission', () => {
 
   async function calculateMissionDetails(missionId: number) {
     loading.value = true
-    const userCards = await db.userCards.toArray()
     const shopCards = await db.shopCards.toArray()
     const userMission = userMissions.value.find((m) => m.id === missionId)
     if (!userMission || userMission.progressText !== 'Not Calculated') {
@@ -25,11 +24,10 @@ export const useMissionStore = defineStore('mission', () => {
     if (mission.type === 'points') {
       const remainingPrice = MissionHelper.calculateTotalPriceOfNonOwnedCards(
         mission,
-        userCards,
         shopCards,
         selectedPriceType.value.sellPrice,
       )
-      const completed = MissionHelper.isMissionComplete(mission, userCards)
+      const completed = MissionHelper.isMissionComplete(mission, shopCards)
       const missionCards = mission.cards
         .map((card) => {
           const shopCard = shopCards.find((shopCard) => shopCard.cardId == card.cardId)
@@ -37,8 +35,6 @@ export const useMissionStore = defineStore('mission', () => {
           if (!shopCard || shopCard.cardId === undefined) {
             return null
           }
-
-          const userCard = userCards.find((userCard) => userCard.cardId == card.cardId)
 
           const price = selectedPriceType.value.sellPrice
             ? shopCard.sellOrderLow || shopCard.lastPrice
@@ -51,8 +47,8 @@ export const useMissionStore = defineStore('mission', () => {
           return {
             cardId: shopCard.cardId,
             title: shopCard.cardTitle,
-            owned: !!userCard,
-            locked: userCard?.lock || false,
+            owned: shopCard.owned,
+            locked: shopCard.locked,
             price,
             highlighted: highlighted,
             points: card.points || 0,
@@ -65,8 +61,10 @@ export const useMissionStore = defineStore('mission', () => {
           return a.price - b.price
         })
       let progressText = ''
-      const ownedPoints = userCards.reduce((total, userCard) => {
-        const card = mission?.cards.find((missionCard) => missionCard.cardId == userCard.cardId)
+      const ownedPoints = shopCards.reduce((total, shopCard) => {
+        const card = mission?.cards.find(
+          (missionCard) => missionCard.cardId == shopCard.cardId && shopCard.owned,
+        )
         return total + (card?.points || 0)
       }, 0)
 
@@ -118,7 +116,6 @@ export const useMissionStore = defineStore('mission', () => {
   async function initialize() {
     loading.value = true
     const shopCards = await db.shopCards.toArray()
-    const userCards = await db.userCards.toArray()
 
     userMissions.value = rawMissions.map((mission) => {
       if (mission.type == 'missions' || mission.type == 'points') {
@@ -133,11 +130,10 @@ export const useMissionStore = defineStore('mission', () => {
       }
       const remainingPrice = MissionHelper.calculateTotalPriceOfNonOwnedCards(
         mission,
-        userCards,
         shopCards,
         selectedPriceType.value.sellPrice,
       )
-      const completed = MissionHelper.isMissionComplete(mission, userCards)
+      const completed = MissionHelper.isMissionComplete(mission, shopCards)
       const missionCards = mission.cards
         .map((card) => {
           const shopCard = shopCards.find((shopCard) => shopCard.cardId == card.cardId)
@@ -145,8 +141,6 @@ export const useMissionStore = defineStore('mission', () => {
           if (!shopCard || shopCard.cardId === undefined) {
             return null
           }
-
-          const userCard = userCards.find((userCard) => userCard.cardId == card.cardId)
 
           const price = selectedPriceType.value.sellPrice
             ? shopCard.sellOrderLow || shopCard.lastPrice
@@ -159,8 +153,8 @@ export const useMissionStore = defineStore('mission', () => {
           return {
             cardId: shopCard.cardId,
             title: shopCard.cardTitle,
-            owned: !!userCard,
-            locked: userCard?.lock || false,
+            owned: shopCard.owned,
+            locked: shopCard.locked,
             price,
             highlighted: highlighted,
             points: card.points || 0,
@@ -173,8 +167,8 @@ export const useMissionStore = defineStore('mission', () => {
           return a.price - b.price
         })
 
-      const ownedCount = userCards.filter((userCard) =>
-        mission?.cards.some((card) => card.cardId == userCard.cardId),
+      const ownedCount = shopCards.filter((shopCard) =>
+        mission?.cards.some((card) => card.cardId == shopCard.cardId && shopCard.owned),
       ).length
 
       const progressText = `${ownedCount} out of any ${mission.requiredCount} of ${mission.totalPoints} total`

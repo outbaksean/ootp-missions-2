@@ -5,4 +5,6 @@ export type ShopCard = {
   sellOrderLow: number
   lastPrice: number
   date: string
+  owned: boolean
+  locked: boolean
 }
