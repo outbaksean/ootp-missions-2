@@ -67,8 +67,12 @@ export const useMissionStore = defineStore('mission', () => {
           return total + (card?.points || 0)
         }, 0)
 
-        const remainingPrice = (mission.requiredCount ?? 0) - ownedPoints
-        progressText = `${ownedPoints} points out of ${mission.requiredCount} of any ${mission.totalPoints} total (${remainingPrice} remaining)`
+        const remainingCount = (mission.requiredCount ?? 0) - ownedPoints
+        if (remainingCount <= 0) {
+          progressText = `Completed with ${ownedPoints} points out of ${mission.requiredCount} of any ${mission.totalPoints} total`
+        } else {
+          progressText = `${ownedPoints} points out of ${mission.requiredCount} of any ${mission.totalPoints} total (${remainingCount} remaining)`
+        }
       } else {
         const ownedCount = userCards.filter((userCard) =>
           mission?.cards.some((card) => card.cardId == userCard.cardId),
