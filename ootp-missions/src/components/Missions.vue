@@ -5,63 +5,55 @@
       <div class="spinner"></div>
     </div>
     <div v-else>
-      <button v-if="selectedMission" @click="toggleMissionList" class="toggle-button">
-        {{ isMissionListCollapsed ? 'Show Mission List' : 'Hide Mission List' }}
-      </button>
-      <div v-show="!isMissionListCollapsed" class="mission-list">
-        <div class="mission-header">
-          <h2>Missions</h2>
-          <div class="form-check form-switch price-toggle">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              role="switch"
-              v-model="useSellPrice"
-              @change="updatePriceType"
-            />
-            <span>Use Sell Price</span>
-          </div>
-          <div class="form-check form-switch price-toggle">
-            <input type="checkbox" class="form-check-input" role="switch" v-model="hideCompleted" />
-            <span>Hide Completed</span>
-          </div>
-          <div class="form-check form-switch price-toggle">
-            <label for="target-mission-dropdown">Target Mission</label>
-            <select
-              id="target-mission-dropdown"
-              v-model="selectedMissionFilter"
-              class="mission-dropdown"
-            >
-              <option value="">All Missions</option>
-              <option
-                v-for="mission in missionsOfTypeMissions"
-                :key="mission.id"
-                :value="mission.id"
-              >
-                {{ mission.rawMission.name }} - {{ mission.rawMission.reward }}
-              </option>
-            </select>
-          </div>
-          <div class="form-check form-switch price-toggle">
-            <label for="category-dropdown">Category</label>
-            <select
-              id="category-dropdown"
-              v-model="selectedCategoryFilter"
-              class="mission-dropdown"
-            >
-              <option value="">All Categories</option>
-              <option v-for="category in missionCategories" :key="category" :value="category">
-                {{ category }}
-              </option>
-            </select>
-          </div>
+      <div class="mission-header">
+        <h2>Missions</h2>
+        <div class="form-check form-switch price-toggle">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            role="switch"
+            v-model="useSellPrice"
+            @change="updatePriceType"
+          />
+          <span>Use Sell Price</span>
         </div>
+        <div class="form-check form-switch price-toggle">
+          <input type="checkbox" class="form-check-input" role="switch" v-model="hideCompleted" />
+          <span>Hide Completed</span>
+        </div>
+        <div class="form-check form-switch price-toggle">
+          <label for="target-mission-dropdown">Target Mission</label>
+          <select
+            id="target-mission-dropdown"
+            v-model="selectedMissionFilter"
+            class="mission-dropdown"
+          >
+            <option value="">All Missions</option>
+            <option v-for="mission in missionsOfTypeMissions" :key="mission.id" :value="mission.id">
+              {{ mission.rawMission.name }} - {{ mission.rawMission.reward }}
+            </option>
+          </select>
+        </div>
+        <div class="form-check form-switch price-toggle">
+          <label for="category-dropdown">Category</label>
+          <select id="category-dropdown" v-model="selectedCategoryFilter" class="mission-dropdown">
+            <option value="">All Categories</option>
+            <option v-for="category in missionCategories" :key="category" :value="category">
+              {{ category }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div v-show="!isMissionListCollapsed" class="mission-list">
         <MissionList
           :filteredMissions="filteredMissions"
           :isMissionComplete="isMissionComplete"
           :remainingPriceText="remainingPriceText"
           :selectMission="selectMission"
         />
+      </div>
+      <div v-if="selectedMission" class="toggle-icon" @click="toggleMissionList">
+        {{ isMissionListCollapsed ? '▼' : '▲' }}
       </div>
       <div v-if="selectedMission !== null" class="mission-details">
         <MissionDetails :selectedMission="selectedMission" :missions="missions" />
@@ -194,18 +186,14 @@ watch(
   box-sizing: border-box; /* Include padding and border in width calculations */
 }
 
-.toggle-button {
-  margin: 10px;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
+.toggle-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-}
-
-.toggle-button:hover {
-  background-color: #0056b3;
+  font-size: 1.5rem;
+  margin: 10px 0;
+  user-select: none; /* Prevent text selection */
 }
 
 .mission-header {
