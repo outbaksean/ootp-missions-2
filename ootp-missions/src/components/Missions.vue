@@ -1,5 +1,5 @@
 <template>
-  <div class="mission-container">
+  <div class="mission-container" :class="{ 'selected-mission': selectedMission }">
     <!-- Add spinner when loading -->
     <div v-if="missionStore.loading" class="spinner-container">
       <div class="spinner"></div>
@@ -154,72 +154,27 @@ watch(
 .mission-container {
   display: flex;
   gap: 20px;
+  flex-wrap: nowrap; /* Prevent wrapping */
+  overflow: hidden; /* Prevent content overflow */
+  height: calc(100vh - 100px); /* Ensure the container fits within the viewport */
+  box-sizing: border-box; /* Include padding and border in height calculations */
 }
 
 .mission-list {
   flex: 1;
   margin: 20px;
+  min-width: 0; /* Allow the mission list to shrink further */
+  max-width: 100%; /* Prevent overflow */
+  overflow-y: auto; /* Add vertical scrolling if content overflows */
+  box-sizing: border-box; /* Include padding and border in width calculations */
 }
 
-.mission-cards {
+.mission-details {
   flex: 1;
   margin: 20px;
-}
-
-.list-group-item {
-  font-size: 1.2rem;
-}
-
-.price-toggle {
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 34px;
-  height: 20px;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: 0.4s;
-  border-radius: 20px;
-}
-
-.slider:before {
-  position: absolute;
-  content: '';
-  height: 14px;
-  width: 14px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: 0.4s;
-  border-radius: 50%;
-}
-
-input:checked + .slider {
-  background-color: #2196f3;
-}
-
-input:checked + .slider:before {
-  transform: translateX(14px);
+  max-width: 100%; /* Prevent overflow */
+  overflow-y: auto; /* Add vertical scrolling if content overflows */
+  box-sizing: border-box; /* Include padding and border in width calculations */
 }
 
 .mission-header {
@@ -227,10 +182,13 @@ input:checked + .slider:before {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  flex-wrap: wrap; /* Allow wrapping to prevent overlap */
 }
 
 .mission-dropdown {
   margin-left: 20px;
+  flex: 1 1 auto; /* Allow dropdowns to resize and wrap */
+  min-width: 150px; /* Ensure dropdowns have a minimum width */
 }
 
 .spinner-container {
@@ -262,5 +220,14 @@ input:checked + .slider:before {
   margin-top: 5px;
   font-size: 0.9rem;
   color: #6c757d;
+}
+
+/* Adjust layout when a mission is selected */
+.mission-container.selected-mission .mission-list {
+  flex: 0.3;
+}
+
+.mission-container.selected-mission .mission-details {
+  flex: 2;
 }
 </style>
