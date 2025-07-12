@@ -23,7 +23,16 @@
           <span class="progress-text">{{ remainingPriceText(mission) }}</span>
         </div>
         <div class="col-auto">
-          <button class="btn btn-primary btn-sm" @click="selectMission(mission)">Select</button>
+          <button
+            v-if="mission.progressText === 'Not Calculated'"
+            class="btn btn-secondary btn-sm"
+            @click="$emit('calculateMission', mission.id)"
+          >
+            Calculate
+          </button>
+          <button v-else class="btn btn-primary btn-sm" @click="selectMission(mission)">
+            Select
+          </button>
         </div>
       </div>
       <div class="reward-text">{{ mission.rawMission.reward }}</div>

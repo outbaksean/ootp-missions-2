@@ -7,19 +7,20 @@ import type { PriceType } from '@/models/PriceType'
 import db from '@/data/indexedDB'
 
 export const useMissionStore = defineStore('mission', () => {
+  const loading = ref<boolean>(true)
   const userMissions = ref<Array<UserMission>>([])
   const selectedMission = ref<UserMission | null>(null)
   const selectedPriceType = ref<PriceType>({ sellPrice: false })
-  const loading = ref(true)
 
   async function calculateMissionDetails(missionId: number) {
+    loading.value = true
     const userCards = await db.userCards.toArray()
     const shopCards = await db.shopCards.toArray()
     const userMission = userMissions.value.find((m) => m.id === missionId)
-    if (!userMission) {
+    if (!userMission || userMission.progressText !== 'Not Calculated') {
       return
     }
-    loading.value = true
+
     const mission = userMission.rawMission
     if (mission.type === 'points') {
       const remainingPrice = MissionHelper.calculateTotalPriceOfNonOwnedCards(
@@ -82,7 +83,15 @@ export const useMissionStore = defineStore('mission', () => {
       userMission.remainingPrice = remainingPrice.totalPrice
     }
     if (mission.type === 'missions') {
-      calculateMissionDetails(missionId)
+      if (!mission.missionIds || mission.missionIds.length === 0) {
+        loading.value = false
+        return
+      }
+      await Promise.all(
+        mission.missionIds.map((id) => {
+          return calculateMissionDetails(id)
+        }),
+      )
       const subMissions = userMissions.value.filter(
         (userMission) =>
           mission.missionIds && mission.missionIds.some((id) => id == userMission.rawMission.id),
@@ -182,5 +191,12 @@ export const useMissionStore = defineStore('mission', () => {
     })
   }
 
-  return { userMissions, selectedMission, selectedPriceType, loading, initialize }
+  return {
+    userMissions,
+    selectedMission,
+    selectedPriceType,
+    loading,
+    initialize,
+    calculateMissionDetails,
+  }
 })

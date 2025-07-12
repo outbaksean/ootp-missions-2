@@ -1,7 +1,7 @@
 <template>
   <div class="mission-container">
     <!-- Add spinner when loading -->
-    <div v-if="missionStore.loading" class="spinner-container">
+    <div v-if="isLoading" class="spinner-container">
       <div class="spinner"></div>
     </div>
     <div v-else>
@@ -50,6 +50,7 @@
           :isMissionComplete="isMissionComplete"
           :remainingPriceText="remainingPriceText"
           :selectMission="selectMission"
+          @calculateMission="missionStore.calculateMissionDetails"
         />
       </div>
       <div v-if="selectedMission" class="toggle-icon" @click="toggleMissionList">
@@ -80,6 +81,8 @@ const selectedMissionFilter = ref<string | null>(null)
 const hideCompleted = ref(false)
 const selectedCategoryFilter = ref<string | null>(null)
 const isMissionListCollapsed = ref(false)
+
+const isLoading = computed(() => missionStore.loading)
 
 const toggleMissionList = () => {
   isMissionListCollapsed.value = !isMissionListCollapsed.value
