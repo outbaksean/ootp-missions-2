@@ -66,18 +66,24 @@
             ></button>
           </div>
           <div class="modal-body">
-            <span class="text-muted mx-3 mb-3">
+            <p class="text-danger mx-3 mb-3">
+              Note: If you have more than 8190 cards exports will be paginated essentially making
+              exporting your card inventory impossible. I recommend quickselling dupliates to get
+              under the limit.
+            </p>
+            <p class="text-muted mx-3 mb-3">
               To get the latest price data, from the card shop, with no filters on click Export Card
               List to CSV.
-            </span>
+            </p>
             <img
               src="/OotpExportShopCards.jpg"
               alt="Shop Cards Export Help"
               class="img-fluid mb-3"
-            /><span class="text-muted mx-3 mb-3">
+            />
+            <p class="text-muted mx-3 mb-3">
               To export your owned card data, add "PT Card ID" and "PT Lock" to a view and with no
               filters click Report, Write report to csv.
-            </span>
+            </p>
             <img src="/OotpUserCardView.jpg" alt="User Card View Help" class="img-fluid" />
             <img
               src="/OotpExportUserCards.jpg"
