@@ -44,36 +44,12 @@
           </select>
         </div>
       </div>
-      <ul class="list-group">
-        <li
-          v-for="mission in filteredMissions"
-          :key="mission.id"
-          class="list-group-item d-flex flex-column align-items-start"
-        >
-          <div class="d-flex justify-content-between w-100">
-            <div class="col text-start">
-              <strong>{{ mission.rawMission.name }}</strong>
-            </div>
-            <div class="col text-start">
-              <span
-                :class="{
-                  'text-success': isMissionComplete(mission),
-                  'text-danger': !isMissionComplete(mission),
-                }"
-              >
-                {{ mission.progressText }}
-              </span>
-            </div>
-            <div class="col text-start">
-              <span class="progress-text">{{ remainingPriceText(mission) }}</span>
-            </div>
-            <div class="col-auto">
-              <button class="btn btn-primary btn-sm" @click="selectMission(mission)">Select</button>
-            </div>
-          </div>
-          <div class="reward-text">{{ mission.rawMission.reward }}</div>
-        </li>
-      </ul>
+      <MissionList
+        :filteredMissions="filteredMissions"
+        :isMissionComplete="isMissionComplete"
+        :remainingPriceText="remainingPriceText"
+        :selectMission="selectMission"
+      />
     </div>
     <div v-if="!missionStore.loading && selectedMission">
       <MissionDetails :selectedMission="selectedMission" :missions="missions" />
@@ -85,6 +61,7 @@
 import { computed, ref, watch } from 'vue'
 import { useMissionStore } from '../stores/useMissionStore'
 import MissionDetails from './MissionDetails.vue'
+import MissionList from './MissionList.vue'
 import type { UserMission } from '../models/UserMission'
 
 const missionStore = useMissionStore()
