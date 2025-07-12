@@ -30,14 +30,22 @@
               class="mission-dropdown"
             >
               <option value="">All Missions</option>
-              <option v-for="mission in missionsOfTypeMissions" :key="mission.id" :value="mission.id">
+              <option
+                v-for="mission in missionsOfTypeMissions"
+                :key="mission.id"
+                :value="mission.id"
+              >
                 {{ mission.rawMission.name }} - {{ mission.rawMission.reward }}
               </option>
             </select>
           </div>
           <div class="form-check form-switch price-toggle">
             <label for="category-dropdown">Category</label>
-            <select id="category-dropdown" v-model="selectedCategoryFilter" class="mission-dropdown">
+            <select
+              id="category-dropdown"
+              v-model="selectedCategoryFilter"
+              class="mission-dropdown"
+            >
               <option value="">All Categories</option>
               <option v-for="category in missionCategories" :key="category" :value="category">
                 {{ category }}
