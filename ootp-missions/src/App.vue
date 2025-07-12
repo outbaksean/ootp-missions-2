@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import CardUploader from './components/CardUploader.vue'
-import MissionList from './components/MissionList.vue'
+import Missions from './components/Missions.vue'
 </script>
 
 <template>
   <CardUploader />
-  <MissionList />
+  <Missions />
 
   <main></main>
 </template>
