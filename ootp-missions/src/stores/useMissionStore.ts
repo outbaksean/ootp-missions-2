@@ -109,6 +109,7 @@ export const useMissionStore = defineStore('mission', () => {
 
         mission.progressText = `${completedCount} out of ${mission.rawMission.requiredCount} missions completed`
         mission.remainingPrice = totalRemainingPrice
+        mission.completed = completedCount >= mission.rawMission.requiredCount
       }
     })
   }
