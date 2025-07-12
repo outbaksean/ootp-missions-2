@@ -5,7 +5,10 @@
       <div class="spinner"></div>
     </div>
     <div v-else>
-      <div class="mission-list">
+      <button v-if="selectedMission" @click="toggleMissionList" class="toggle-button">
+        {{ isMissionListCollapsed ? 'Show Mission List' : 'Hide Mission List' }}
+      </button>
+      <div v-show="!isMissionListCollapsed" class="mission-list">
         <div class="mission-header">
           <h2>Missions</h2>
           <div class="form-check form-switch price-toggle">
@@ -84,6 +87,11 @@ const useSellPrice = ref(false)
 const selectedMissionFilter = ref<string | null>(null)
 const hideCompleted = ref(false)
 const selectedCategoryFilter = ref<string | null>(null)
+const isMissionListCollapsed = ref(false)
+
+const toggleMissionList = () => {
+  isMissionListCollapsed.value = !isMissionListCollapsed.value
+}
 
 const updatePriceType = () => {
   missionStore.selectedPriceType.sellPrice = useSellPrice.value
@@ -139,6 +147,7 @@ const isMissionComplete = (mission: UserMission) => {
 
 const selectMission = (mission: UserMission) => {
   selectedMission.value = mission
+  isMissionListCollapsed.value = true // Automatically hide the mission list
 }
 
 const missionCategories = computed(() => {
@@ -183,6 +192,20 @@ watch(
   margin: 20px;
   max-width: 100%; /* Prevent overflow */
   box-sizing: border-box; /* Include padding and border in width calculations */
+}
+
+.toggle-button {
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.toggle-button:hover {
+  background-color: #0056b3;
 }
 
 .mission-header {
