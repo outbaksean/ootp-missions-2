@@ -1,7 +1,5 @@
 <template>
   <div class="mission-cards">
-    <p v-if="!selectedMission">No mission selected</p>
-    <p v-else>Selected Mission: {{ selectedMission.rawMission.name }}</p>
     <template v-if="selectedMission && selectedMission.rawMission.type === 'missions'">
       <h3>Sub-Missions for {{ selectedMission.rawMission.name }}</h3>
       <ul class="list-group">
