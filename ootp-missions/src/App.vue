@@ -7,5 +7,28 @@ import Missions from './components/Missions.vue'
   <CardUploader />
   <Missions />
 
-  <main></main>
+  <footer>
+    Open source code available here:
+    <a href="https://github.com/outbaksean/ootp-missions-2" target="_blank"
+      >https://github.com/outbaksean/ootp-missions-2</a
+    >
+  </footer>
 </template>
+
+<style scoped>
+footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+footer a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+</style>
