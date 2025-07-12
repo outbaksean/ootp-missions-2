@@ -10,3 +10,8 @@ Built with GitHub Copilot using GPT-4o
 ## To add new missions
 
 - Update `/ootp-missions/src/data/missions.ts` with a new entry for each mission
+
+## To run locally
+
+- `npm run install`
+- `npm run dev`
