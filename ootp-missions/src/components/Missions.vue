@@ -1,58 +1,60 @@
 <template>
-  <div class="mission-container" :class="{ 'selected-mission': selectedMission }">
+  <div class="mission-container">
     <!-- Add spinner when loading -->
     <div v-if="missionStore.loading" class="spinner-container">
       <div class="spinner"></div>
     </div>
-    <div v-else class="mission-list">
-      <div class="mission-header">
-        <h2>Missions</h2>
-        <div class="form-check form-switch price-toggle">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            role="switch"
-            v-model="useSellPrice"
-            @change="updatePriceType"
-          />
-          <span>Use Sell Price</span>
+    <div v-else>
+      <div class="mission-list">
+        <div class="mission-header">
+          <h2>Missions</h2>
+          <div class="form-check form-switch price-toggle">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              role="switch"
+              v-model="useSellPrice"
+              @change="updatePriceType"
+            />
+            <span>Use Sell Price</span>
+          </div>
+          <div class="form-check form-switch price-toggle">
+            <input type="checkbox" class="form-check-input" role="switch" v-model="hideCompleted" />
+            <span>Hide Completed</span>
+          </div>
+          <div class="form-check form-switch price-toggle">
+            <label for="target-mission-dropdown">Target Mission</label>
+            <select
+              id="target-mission-dropdown"
+              v-model="selectedMissionFilter"
+              class="mission-dropdown"
+            >
+              <option value="">All Missions</option>
+              <option v-for="mission in missionsOfTypeMissions" :key="mission.id" :value="mission.id">
+                {{ mission.rawMission.name }} - {{ mission.rawMission.reward }}
+              </option>
+            </select>
+          </div>
+          <div class="form-check form-switch price-toggle">
+            <label for="category-dropdown">Category</label>
+            <select id="category-dropdown" v-model="selectedCategoryFilter" class="mission-dropdown">
+              <option value="">All Categories</option>
+              <option v-for="category in missionCategories" :key="category" :value="category">
+                {{ category }}
+              </option>
+            </select>
+          </div>
         </div>
-        <div class="form-check form-switch price-toggle">
-          <input type="checkbox" class="form-check-input" role="switch" v-model="hideCompleted" />
-          <span>Hide Completed</span>
-        </div>
-        <div class="form-check form-switch price-toggle">
-          <label for="target-mission-dropdown">Target Mission</label>
-          <select
-            id="target-mission-dropdown"
-            v-model="selectedMissionFilter"
-            class="mission-dropdown"
-          >
-            <option value="">All Missions</option>
-            <option v-for="mission in missionsOfTypeMissions" :key="mission.id" :value="mission.id">
-              {{ mission.rawMission.name }} - {{ mission.rawMission.reward }}
-            </option>
-          </select>
-        </div>
-        <div class="form-check form-switch price-toggle">
-          <label for="category-dropdown">Category</label>
-          <select id="category-dropdown" v-model="selectedCategoryFilter" class="mission-dropdown">
-            <option value="">All Categories</option>
-            <option v-for="category in missionCategories" :key="category" :value="category">
-              {{ category }}
-            </option>
-          </select>
-        </div>
+        <MissionList
+          :filteredMissions="filteredMissions"
+          :isMissionComplete="isMissionComplete"
+          :remainingPriceText="remainingPriceText"
+          :selectMission="selectMission"
+        />
       </div>
-      <MissionList
-        :filteredMissions="filteredMissions"
-        :isMissionComplete="isMissionComplete"
-        :remainingPriceText="remainingPriceText"
-        :selectMission="selectMission"
-      />
-    </div>
-    <div v-if="!missionStore.loading && selectedMission">
-      <MissionDetails :selectedMission="selectedMission" :missions="missions" />
+      <div v-if="selectedMission !== null" class="mission-details">
+        <MissionDetails :selectedMission="selectedMission" :missions="missions" />
+      </div>
     </div>
   </div>
 </template>
@@ -153,27 +155,25 @@ watch(
 <style scoped>
 .mission-container {
   display: flex;
+  flex-direction: column; /* Stack items vertically */
   gap: 20px;
-  flex-wrap: nowrap; /* Prevent wrapping */
-  overflow: hidden; /* Prevent content overflow */
-  height: calc(100vh - 100px); /* Ensure the container fits within the viewport */
+  overflow: visible; /* Use browser scrollbar instead of internal scrollbars */
+  height: auto; /* Allow height to adjust based on content */
   box-sizing: border-box; /* Include padding and border in height calculations */
 }
 
 .mission-list {
-  flex: 1;
+  flex: none; /* Prevent flex-grow to avoid internal scrolling */
   margin: 20px;
   min-width: 0; /* Allow the mission list to shrink further */
   max-width: 100%; /* Prevent overflow */
-  overflow-y: auto; /* Add vertical scrolling if content overflows */
   box-sizing: border-box; /* Include padding and border in width calculations */
 }
 
 .mission-details {
-  flex: 1;
+  flex: none; /* Prevent flex-grow to avoid internal scrolling */
   margin: 20px;
   max-width: 100%; /* Prevent overflow */
-  overflow-y: auto; /* Add vertical scrolling if content overflows */
   box-sizing: border-box; /* Include padding and border in width calculations */
 }
 
@@ -220,14 +220,5 @@ watch(
   margin-top: 5px;
   font-size: 0.9rem;
   color: #6c757d;
-}
-
-/* Adjust layout when a mission is selected */
-.mission-container.selected-mission .mission-list {
-  flex: 0.3;
-}
-
-.mission-container.selected-mission .mission-details {
-  flex: 2;
 }
 </style>
