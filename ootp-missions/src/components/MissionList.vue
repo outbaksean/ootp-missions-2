@@ -75,50 +75,8 @@
         </li>
       </ul>
     </div>
-    <div v-if="!missionStore.loading && selectedMission" class="mission-cards">
-      <template v-if="selectedMission.rawMission.type === 'missions'">
-        <h3>Sub-Missions for {{ selectedMission.rawMission.name }}</h3>
-        <ul class="list-group">
-          <li
-            v-for="subMission in selectedMissionSubMissions"
-            :key="subMission.id"
-            class="list-group-item d-flex justify-content-between align-items-center"
-          >
-            <span
-              ><strong>{{ subMission.rawMission.name }}</strong></span
-            >
-            <span
-              :class="{
-                'text-success': isMissionComplete(subMission),
-                'text-danger': !isMissionComplete(subMission),
-              }"
-            >
-              {{ subMission.progressText }}
-            </span>
-            <span class="progress-text">{{ remainingPriceText(subMission) }}</span>
-          </li>
-        </ul>
-      </template>
-      <template v-else>
-        <h3>Mission Cards for {{ selectedMission.rawMission.name }}</h3>
-        <h4 class="text-muted">
-          {{ selectedMission.rawMission.reward }}
-        </h4>
-        <ul class="list-group">
-          <li
-            v-for="card in selectedMission.missionCards"
-            :key="card.cardId"
-            class="list-group-item"
-            :style="{ backgroundColor: card.highlighted ? '#ffeb3b' : '' }"
-          >
-            <span :class="{ 'text-muted': card.locked }">
-              {{ missionCardDescription(card) }}
-            </span>
-            <span v-if="card.owned" class="badge bg-success">Owned</span>
-            <span v-if="card.locked" class="badge bg-secondary">Locked</span>
-          </li>
-        </ul>
-      </template>
+    <div v-if="!missionStore.loading && selectedMission">
+      <MissionDetails :selectedMission="selectedMission" :missions="missions" />
     </div>
   </div>
 </template>
@@ -126,8 +84,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useMissionStore } from '../stores/useMissionStore'
+import MissionDetails from './MissionDetails.vue'
 import type { UserMission } from '../models/UserMission'
-import type { MissionCard } from '@/models/MissionCard'
 
 const missionStore = useMissionStore()
 const missions = computed(() => missionStore.userMissions)
@@ -188,32 +146,6 @@ const remainingPriceText = (mission: UserMission) => {
   })} PP`
 }
 
-const missionCardDescription = (card: MissionCard) => {
-  if (selectedMission.value?.rawMission.type === 'points') {
-    return (
-      card.title +
-      ' - ' +
-      card.points +
-      ' Points - ' +
-      card.price.toLocaleString(undefined, {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }) +
-      ' PP'
-    )
-  } else {
-    return (
-      card.title +
-      ' - ' +
-      card.price.toLocaleString(undefined, {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }) +
-      ' PP'
-    )
-  }
-}
-
 const isMissionComplete = (mission: UserMission) => {
   return mission.completed
 }
@@ -221,14 +153,6 @@ const isMissionComplete = (mission: UserMission) => {
 const selectMission = (mission: UserMission) => {
   selectedMission.value = mission
 }
-
-const selectedMissionSubMissions = computed(() => {
-  if (selectedMission.value?.rawMission.type === 'missions') {
-    const missionIds = selectedMission.value.rawMission.missionIds || []
-    return missions.value.filter((mission) => missionIds.includes(mission.id))
-  }
-  return []
-})
 
 const missionCategories = computed(() => {
   const categories = new Set<string>()
