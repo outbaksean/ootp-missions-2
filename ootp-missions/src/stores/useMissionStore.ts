@@ -12,8 +12,10 @@ export const useMissionStore = defineStore('mission', () => {
   const selectedMission = ref<UserMission | null>(null)
   const selectedPriceType = ref<PriceType>({ sellPrice: false })
 
-  async function calculateMissionDetails(missionId: number) {
-    loading.value = true
+  async function calculateMissionDetails(missionId: number, isSubMission = false) {
+    if (!isSubMission) {
+      loading.value = true
+    }
     const shopCards = await db.shopCards.toArray()
     const userMission = userMissions.value.find((m) => m.id === missionId)
     if (!userMission || userMission.progressText !== 'Not Calculated') {
@@ -87,7 +89,7 @@ export const useMissionStore = defineStore('mission', () => {
       }
       await Promise.all(
         mission.missionIds.map((id) => {
-          return calculateMissionDetails(id)
+          return calculateMissionDetails(id, true)
         }),
       )
       const subMissions = userMissions.value.filter(
@@ -110,7 +112,9 @@ export const useMissionStore = defineStore('mission', () => {
       userMission.remainingPrice = totalRemainingPrice
       userMission.completed = completedCount >= mission.requiredCount
     }
-    loading.value = false
+    if (!isSubMission) {
+      loading.value = false
+    }
   }
 
   async function initialize() {
