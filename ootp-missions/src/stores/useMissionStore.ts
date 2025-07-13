@@ -189,6 +189,16 @@ export const useMissionStore = defineStore('mission', () => {
     })
   }
 
+  async function calculateAllNotCalculatedMissions() {
+    const notCalculatedMissions = userMissions.value.filter(
+      (mission) => mission.progressText === 'Not Calculated',
+    )
+
+    for (const mission of notCalculatedMissions) {
+      await calculateMissionDetails(mission.id)
+    }
+  }
+
   return {
     userMissions,
     selectedMission,
@@ -196,5 +206,6 @@ export const useMissionStore = defineStore('mission', () => {
     loading,
     initialize,
     calculateMissionDetails,
+    calculateAllNotCalculatedMissions,
   }
 })

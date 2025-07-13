@@ -43,6 +43,11 @@
             </option>
           </select>
         </div>
+        <div class="form-check form-switch price-toggle">
+          <button @click="missionStore.calculateAllNotCalculatedMissions" class="btn btn-primary">
+            Calculate All (may take a while)
+          </button>
+        </div>
       </div>
       <div v-show="!isMissionListCollapsed" class="mission-list">
         <MissionList
