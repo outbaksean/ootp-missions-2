@@ -73,6 +73,22 @@
               alt="Shop Cards Export Help"
               class="img-fluid mb-3"
             />
+            <p class="text-muted mx-3 mb-3">
+              To export your locked card data, add "PT Card ID" and "PT Lock" to a view and with no
+              filters click Report, Write report to csv. This is only for displaying locked cards,
+              owned cards come from the shop csv
+            </p>
+            <p class="text-danger mx-3 mb-3">
+              Note: If you have more than 8190 cards exports will be paginated essentially making
+              exporting your card inventory impossible. If you want locked status to be displayed
+              and are over the limit, I recommend quickselling duplicates to get under the limit.
+            </p>
+            <img src="/OotpUserCardView.jpg" alt="User Card View Help" class="img-fluid" />
+            <img
+              src="/OotpExportUserCards.jpg"
+              alt="User Cards Export Help"
+              class="img-fluid mb-3"
+            />
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
