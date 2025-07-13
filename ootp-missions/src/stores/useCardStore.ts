@@ -26,7 +26,7 @@ export const useCardStore = defineStore('card', () => {
       skipEmptyLines: true,
       complete: async (results: { data: ShopCard[] }) => {
         const data = results.data.map((row: any) => ({
-          cardId: row['Card ID'].toString(),
+          cardId: parseInt(row['Card ID'], 10) || 0,
           name: row['//Card Title'] || 'Unknown',
           sellPrice: parseInt(row['Sell Order Low'], 10) || 0,
           cardTitle: row['//Card Title'] || 'Unknown',
@@ -44,6 +44,28 @@ export const useCardStore = defineStore('card', () => {
     })
   }
 
+  async function uploadUserFile(file: File) {
+    const text = await file.text()
+    Papa.parse(text, {
+      header: true,
+      skipEmptyLines: true,
+      complete: async (results: { data: { CID: string; Lock: string }[] }) => {
+        const userCards = results.data
+        for (const userCard of userCards) {
+          if (userCard.Lock === 'Yes') {
+            const cardId = parseInt(userCard.CID, 10)
+            const shopCard = await db.shopCards.get(cardId)
+            if (shopCard) {
+              shopCard.locked = true
+              await db.shopCards.put(shopCard)
+            }
+          }
+        }
+        shopCards.value = await db.shopCards.toArray()
+      },
+    })
+  }
+
   async function initialize() {
     const existingShopCards = await db.shopCards.toArray()
 
@@ -55,7 +77,7 @@ export const useCardStore = defineStore('card', () => {
         skipEmptyLines: true,
         complete: async (results: { data: ShopCard[] }) => {
           const data = results.data.map((row: any) => ({
-            cardId: row['Card ID'].toString(),
+            cardId: parseInt(row['Card ID'], 10) || 0,
             name: row['//Card Title'] || 'Unknown',
             sellPrice: parseInt(row['Sell Order Low'], 10) || 0,
             cardTitle: row['//Card Title'] || 'Unknown',
@@ -79,6 +101,7 @@ export const useCardStore = defineStore('card', () => {
     hasShopCards,
     clearShopCards,
     uploadShopFile,
+    uploadUserFile,
     initialize,
   }
 })

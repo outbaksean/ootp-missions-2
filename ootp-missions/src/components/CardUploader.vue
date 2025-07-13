@@ -32,6 +32,15 @@
             Clear
           </button>
         </div>
+        <div class="d-flex align-items-center">
+          <label for="userCardsFile" class="form-label me-2">User Cards:</label>
+          <input
+            type="file"
+            id="userCardsFile"
+            class="form-control me-2"
+            @change="handleUserCardsUpload"
+          />
+        </div>
       </div>
     </div>
 
@@ -102,5 +111,12 @@ const handleShopCardsUpload = async (event: Event) => {
 const clearShopCards = async () => {
   await cardStore.clearShopCards()
   await missionStore.initialize()
+}
+
+const handleUserCardsUpload = async (event: Event) => {
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (file) {
+    await cardStore.uploadUserFile(file)
+  }
 }
 </script>
