@@ -44,7 +44,12 @@
           </select>
         </div>
         <div class="form-check form-switch price-toggle">
-          <button @click="missionStore.calculateAllNotCalculatedMissions" class="btn btn-primary">
+          <button
+            @click="
+              missionStore.calculateAllNotCalculatedMissions(filteredMissions.map((m) => m.id))
+            "
+            class="btn btn-primary"
+          >
             Calculate All (may take a while)
           </button>
         </div>
