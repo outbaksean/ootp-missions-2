@@ -2947,7 +2947,7 @@ const missions: Mission[] = [
   },
   {
     id: 115,
-    name: 'Live Level 1 - Las Angeles (N)',
+    name: 'Live Level 2 - Las Angeles (N)',
     type: 'count',
     requiredCount: 26,
     reward: '98 SS Pee Wee Reese, 1 Silver Pack',
@@ -3104,7 +3104,7 @@ const missions: Mission[] = [
   },
   {
     id: 118,
-    name: 'Live Level 1 - Colorado',
+    name: 'Live Level 2 - Colorado',
     type: 'count',
     requiredCount: 26,
     reward: '89 CF Charlie Blackmon, 1 Standard Pack',
