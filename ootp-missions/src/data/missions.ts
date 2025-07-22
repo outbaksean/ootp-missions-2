@@ -1471,7 +1471,7 @@ const missions: Mission[] = [
       { cardId: 73498, points: 15 },
       { cardId: 73507, points: 15 },
       { cardId: 73561, points: 50 },
-      { cardId: 73265, points: 75 },
+      { cardId: 73506, points: 75 },
     ],
   },
   {
@@ -5868,7 +5868,7 @@ const missions: Mission[] = [
     id: 190,
     name: 'LIVE Level 2 COMPLETE',
     type: 'missions',
-    requiredCount: 6,
+    requiredCount: 7,
     missionIds: [119, 131, 143, 155, 176, 188, 189],
     reward: '100 SS Honus Wagner, 1 Diamond Pack',
     category: 'Live Series',
