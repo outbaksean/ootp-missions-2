@@ -636,7 +636,7 @@ const missions: Mission[] = [
       { cardId: 70815, points: 50 },
       { cardId: 71116, points: 50 },
       { cardId: 70322, points: 50 },
-      { cardId: 70882, points: 50 },
+      { cardId: 70882, points: 75 },
       { cardId: 71246, points: 75 },
     ],
   },
