@@ -6955,7 +6955,7 @@ const missions: Mission[] = [
       { cardId: 74858 },
       { cardId: 72986 },
       { cardId: 72987 },
-      { cardId: 73486 },
+      { cardId: 74959 },
       { cardId: 73254 },
       { cardId: 74853 },
       { cardId: 74269 },
