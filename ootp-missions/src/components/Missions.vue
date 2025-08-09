@@ -18,6 +18,16 @@
           <span>Use Sell Price</span>
         </div>
         <div class="form-check form-switch price-toggle">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            role="switch"
+            v-model="useGreedyAlgorithm"
+            @change="updatePointsAlgorithm"
+          />
+          <span>Greedy Algorithm</span>
+        </div>
+        <div class="form-check form-switch price-toggle">
           <input type="checkbox" class="form-check-input" role="switch" v-model="hideCompleted" />
           <span>Hide Completed</span>
         </div>
@@ -91,6 +101,7 @@ const selectedMissionFilter = ref<string | null>(null)
 const hideCompleted = ref(false)
 const selectedCategoryFilter = ref<string | null>(null)
 const isMissionListCollapsed = ref(false)
+const useGreedyAlgorithm = ref(false)
 
 const isLoading = computed(() => missionStore.loading)
 
@@ -101,6 +112,10 @@ const toggleMissionList = () => {
 const updatePriceType = () => {
   missionStore.selectedPriceType.sellPrice = useSellPrice.value
   missionStore.initialize()
+}
+
+const updatePointsAlgorithm = () => {
+  missionStore.useGreedyAlgorithm = useGreedyAlgorithm.value
 }
 
 const filteredMissions = computed(() => {

@@ -11,10 +11,15 @@ export default class MissionHelper {
     sortedCards: Array<{ cardId: number; price: number }>,
     mission: Mission,
     shopCards: Array<ShopCard>,
+    useGreedyAlgorithm: boolean = false,
   ): {
     totalPrice: number
     includedCards: Array<{ cardId: number; price: number }>
   } {
+    if (useGreedyAlgorithm) {
+      return this.calculatePriceDetailsPointsTypeGreedy(sortedCards, mission, shopCards)
+    }
+
     const ownedPoints = shopCards.reduce(
       (sum, shopCard) =>
         sum +
@@ -58,6 +63,49 @@ export default class MissionHelper {
       includedCards: bestCombination,
     }
   }
+
+  private static calculatePriceDetailsPointsTypeGreedy(
+    sortedCards: Array<{ cardId: number; price: number }>,
+    mission: Mission,
+    shopCards: Array<ShopCard>,
+  ): {
+    totalPrice: number
+    includedCards: Array<{ cardId: number; price: number }>
+  } {
+    const ownedPoints = shopCards.reduce(
+      (sum, shopCard) =>
+        sum +
+        (mission.cards.find((card) => shopCard.owned && card.cardId == shopCard.cardId)?.points ||
+          0),
+      0,
+    )
+
+    const requiredPoints = Math.max(mission.requiredCount - ownedPoints, 0)
+
+    // Sort cards by price-to-points ratio
+    const cardsWithPoints = sortedCards.map((card) => ({
+      ...card,
+      points: mission.cards.find((mCard) => mCard.cardId == card.cardId)?.points || 0,
+    }))
+    cardsWithPoints.sort((a, b) => a.price / a.points - b.price / b.points)
+
+    let totalPrice = 0
+    let accumulatedPoints = 0
+    const includedCards: Array<{ cardId: number; price: number }> = []
+
+    for (const card of cardsWithPoints) {
+      if (accumulatedPoints >= requiredPoints) break
+      includedCards.push(card)
+      totalPrice += card.price
+      accumulatedPoints += card.points
+    }
+
+    return {
+      totalPrice: accumulatedPoints >= requiredPoints ? totalPrice : 0,
+      includedCards: accumulatedPoints >= requiredPoints ? includedCards : [],
+    }
+  }
+
   private static calculatePriceDetailsCardType(
     sortedCards: Array<{ cardId: number; price: number }>,
     mission: Mission,
@@ -84,6 +132,7 @@ export default class MissionHelper {
     mission: Mission,
     shopCardsData: Array<ShopCard>,
     useSellPrice: boolean,
+    useGreedyAlgorithm: boolean = false, // Add the toggle parameter
   ): PriceCalculationResult {
     const nonOwnedCards = mission.cards
       .filter(
@@ -111,7 +160,12 @@ export default class MissionHelper {
     if (mission.type === 'count') {
       return this.calculatePriceDetailsCardType(sortedCards, mission, shopCardsData)
     } else if (mission.type === 'points') {
-      return this.calculatePriceDetailsPointsType(sortedCards, mission, shopCardsData)
+      return this.calculatePriceDetailsPointsType(
+        sortedCards,
+        mission,
+        shopCardsData,
+        useGreedyAlgorithm,
+      ) // Pass the toggle
     } else {
       return {
         totalPrice: 0,

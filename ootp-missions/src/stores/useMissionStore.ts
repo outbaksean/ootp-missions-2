@@ -11,6 +11,7 @@ export const useMissionStore = defineStore('mission', () => {
   const userMissions = ref<Array<UserMission>>([])
   const selectedMission = ref<UserMission | null>(null)
   const selectedPriceType = ref<PriceType>({ sellPrice: false })
+  const useGreedyAlgorithm = ref<boolean>(false)
 
   async function calculateMissionDetails(missionId: number, isSubMission = false) {
     if (!isSubMission) {
@@ -28,6 +29,7 @@ export const useMissionStore = defineStore('mission', () => {
         mission,
         shopCards,
         selectedPriceType.value.sellPrice,
+        useGreedyAlgorithm.value, // Pass the toggle value here
       )
       const completed = MissionHelper.isMissionComplete(mission, shopCards)
       const missionCards = mission.cards
@@ -136,6 +138,7 @@ export const useMissionStore = defineStore('mission', () => {
         mission,
         shopCards,
         selectedPriceType.value.sellPrice,
+        useGreedyAlgorithm.value, // Pass the toggle value here
       )
       const completed = MissionHelper.isMissionComplete(mission, shopCards)
       const missionCards = mission.cards
@@ -204,6 +207,7 @@ export const useMissionStore = defineStore('mission', () => {
     userMissions,
     selectedMission,
     selectedPriceType,
+    useGreedyAlgorithm, // Expose the toggle
     loading,
     initialize,
     calculateMissionDetails,
