@@ -89,6 +89,10 @@
               alt="User Cards Export Help"
               class="img-fluid mb-3"
             />
+            <p>
+              The greedy algorithm is much faster then the base algorithm but is not guaranteed to
+              give perfect results
+            </p>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
