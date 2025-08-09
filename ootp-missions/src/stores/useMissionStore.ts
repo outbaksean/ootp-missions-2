@@ -11,7 +11,7 @@ export const useMissionStore = defineStore('mission', () => {
   const userMissions = ref<Array<UserMission>>([])
   const selectedMission = ref<UserMission | null>(null)
   const selectedPriceType = ref<PriceType>({ sellPrice: false })
-  const useGreedyAlgorithm = ref<boolean>(false)
+  const useGreedyAlgorithm = ref<boolean>(true)
 
   async function calculateMissionDetails(missionId: number, isSubMission = false) {
     if (!isSubMission) {
