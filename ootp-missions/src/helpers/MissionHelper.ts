@@ -148,7 +148,7 @@ export default class MissionHelper {
 
         return { cardId: card.cardId, price }
       })
-      .filter((card) => card !== null) as Array<{
+      .filter((card) => card !== null && card.price > 0) as Array<{
       cardId: number
       price: number
     }>
