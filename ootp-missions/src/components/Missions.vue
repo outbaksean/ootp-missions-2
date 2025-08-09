@@ -31,6 +31,8 @@
           <input type="checkbox" class="form-check-input" role="switch" v-model="hideCompleted" />
           <span>Hide Completed</span>
         </div>
+      </div>
+      <div class="mission-header">
         <div class="form-check form-switch price-toggle">
           <label for="target-mission-dropdown">Target Mission</label>
           <select
