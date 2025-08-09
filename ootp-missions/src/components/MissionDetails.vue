@@ -25,6 +25,7 @@
     </template>
     <template v-else-if="selectedMission">
       <h3>Mission Cards for {{ selectedMission.rawMission.name }}</h3>
+      <h4 class="progress-text">{{ remainingPriceText(selectedMission) }}</h4>
       <h4 class="text-muted">{{ selectedMission.rawMission.reward }}</h4>
       <ul class="list-group">
         <li
