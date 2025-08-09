@@ -25,7 +25,7 @@
             v-model="useGreedyAlgorithm"
             @change="updatePointsAlgorithm"
           />
-          <span>Greedy Algorithm</span>
+          <span>Use Greedy Algorithm</span>
         </div>
         <div class="form-check form-switch price-toggle">
           <input type="checkbox" class="form-check-input" role="switch" v-model="hideCompleted" />
@@ -103,7 +103,7 @@ const selectedMissionFilter = ref<string | null>(null)
 const hideCompleted = ref(false)
 const selectedCategoryFilter = ref<string | null>(null)
 const isMissionListCollapsed = ref(false)
-const useGreedyAlgorithm = ref(false)
+const useGreedyAlgorithm = ref(true)
 
 const isLoading = computed(() => missionStore.loading)
 
