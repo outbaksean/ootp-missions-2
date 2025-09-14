@@ -7253,7 +7253,7 @@ const missions: Mission[] = [
       { cardId: 74474, points: 15 },
       { cardId: 75115, points: 50 },
       { cardId: 74032, points: 50 },
-      { cardId: 72447, points: 50 },
+      { cardId: 74097, points: 50 },
       { cardId: 75044, points: 50 },
       { cardId: 74145, points: 75 },
       { cardId: 75046, points: 200 },
